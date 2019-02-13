@@ -95,3 +95,24 @@ Array.prototype.unique = function () {
   O = null
   return r
 }
+
+
+// 返回设备类型
+export const device = () => {
+  let userAgentInfo = navigator.userAgent;
+  let Agents = [
+    "Android",
+    "iPhone",
+    "SymbianOS",
+    "Windows Phone",
+    "iPad",
+    "iPod"
+  ];
+
+  for (let i = 0; i < Agents.length; i++) {
+    if (userAgentInfo.indexOf(Agents[i]) > 0) {
+      return Agents[i];
+    }
+  }
+  return 'Pc'
+};

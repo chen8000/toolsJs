@@ -78,3 +78,20 @@ export const HS = ca => {
   }
   window.onorientationchange()
 }
+
+
+
+// 数组去重  [1,2,1,2,1].unique()
+Array.prototype.unique = function () {
+  let l = this.length,
+    r = [],
+    O = {};
+  for (let i = 0; i < l; i++) {
+    if (!O[this[i]]) {
+      O[this[i]] = 'abc';
+      r.push(this[i])
+    }
+  }
+  O = null
+  return r
+}

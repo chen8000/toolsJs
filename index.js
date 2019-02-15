@@ -118,6 +118,7 @@ export const device = () => {
 };
 
 // 摇一摇事件
+// 传入要触发的函数
 export const shake = callback => {
   //运动事件监听
   if (window.DeviceMotionEvent) {
@@ -155,4 +156,16 @@ export const shake = callback => {
       last_z = z;
     }
   }
+}
+
+// 长按事件
+// 传入要绑定事件的元素，和要触发的函数
+export const press = (ele, callback) => {
+  let timeout = 0;
+  ele.addEventListener('touchstart', () => {
+    timeout = setTimeout(callback, 800); //长按时间超过800ms
+  }, false)
+  ele.addEventListener('touchend', function () {
+    clearTimeout(timeout); //长按时间少于800ms
+  }, false);
 }

@@ -182,12 +182,16 @@ export const press = (ele, callback) => {
 //----------------------- 加载外部字体 -------------------------//
 // 解决在外部字体没有加载进来页面文字不显示问题
 export const loadFont = (font, callback) => {
+
   let num = 0
+  let fontL = 0
   if (Object.prototype.toString.call(font) === "[object Array]") {
+    fontL = font.length;
     for (let i = 0; i < font.length; i++) {
       createSpan(font[i])
     }
   } else {
+    fontL = 1
     createSpan(font)
   }
 
@@ -205,7 +209,7 @@ export const loadFont = (font, callback) => {
         num++
         document.body.removeChild(span)
         span = null
-        num === font.length && callback()
+        num === fontL && callback()
       }
     }, 30)
   }

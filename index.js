@@ -65,6 +65,8 @@ export const getBodyWH = () => {
   }
 }
 
+
+
 //----------------------- 判断是否横屏 -------------------------//
 
 export const HS = ca => {
@@ -81,7 +83,9 @@ export const HS = ca => {
 
 
 
-// 数组去重  [1,2,1,2,1].unique()
+
+//----------------------- 数组去重 -------------------------//
+// [1,2,1,2,1].unique()
 Array.prototype.unique = function () {
   let l = this.length,
     r = [],
@@ -97,7 +101,9 @@ Array.prototype.unique = function () {
 }
 
 
-// 返回设备类型
+
+//----------------------- 返回设备类型 -------------------------//
+
 export const device = () => {
   let userAgentInfo = navigator.userAgent;
   let Agents = [
@@ -117,7 +123,8 @@ export const device = () => {
   return 'Pc'
 };
 
-// 摇一摇事件
+
+//----------------------- 摇一摇事件 -------------------------//
 // 传入要触发的函数
 export const shake = callback => {
   //运动事件监听
@@ -158,7 +165,8 @@ export const shake = callback => {
   }
 }
 
-// 长按事件
+
+//----------------------- 长按事件 -------------------------//
 // 传入要绑定事件的元素，和要触发的函数
 export const press = (ele, callback) => {
   let timeout = 0;
@@ -168,4 +176,48 @@ export const press = (ele, callback) => {
   ele.addEventListener('touchend', function () {
     clearTimeout(timeout); //长按时间少于800ms
   }, false);
+}
+
+
+//----------------------- 加载外部字体 -------------------------//
+// 解决在外部字体没有加载进来页面文字不显示问题
+export const loadFont = (font, callback) => {
+  let num = 0
+  if (Object.prototype.toString.call(font) === "[object Array]") {
+    for (let i = 0; i < font.length; i++) {
+      createSpan(font[i])
+    }
+  } else {
+    createSpan(font)
+  }
+
+
+  function createSpan(f) {
+    let span = document.createElement("span") // 创建一个span
+    span.innerHTML = "gW@i#Q!T"
+    setCss(span) // 设置css样式
+    span.style.fontFamily = f // 设置span的字体为外部字体
+    document.body.appendChild(span)
+    let width_now = span.offsetWidth // 获取span的初始宽度
+    let interval_check = setInterval(function () {
+      if (span.offsetWidth != width_now) { // 当宽度改变后说明字体加载完成了
+        clearInterval(interval_check)
+        num++
+        document.body.removeChild(span)
+        span = null
+        num === font.length && callback()
+      }
+    }, 30)
+  }
+
+  // 设置css样式
+  function setCss(span) {
+    span.style.visibility = "hidden"
+    span.style.fontSize = "50px"
+    span.style.opacity = 0;
+    span.style.position = 'absolute'
+    span.style.bottom = 0
+    span.style.left = 0
+    span.style.zIndex = -1
+  }
 }

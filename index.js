@@ -198,10 +198,7 @@ export const loadFont = (font, callback) => {
 
   function createSpan(f) {
     let span = document.createElement("span") // 创建一个span
-    span.innerHTML = "gW@i#Q!T"
-    setCss(span) // 设置css样式
-    span.style.fontFamily = f // 设置span的字体为外部字体
-    document.body.appendChild(span)
+    setEle(span, f) // 设置css样式
     let width_now = span.offsetWidth // 获取span的初始宽度
     let interval_check = setInterval(function () {
       if (span.offsetWidth != width_now) { // 当宽度改变后说明字体加载完成了
@@ -215,7 +212,8 @@ export const loadFont = (font, callback) => {
   }
 
   // 设置css样式
-  function setCss(span) {
+  function setEle(span, f) {
+    span.innerHTML = "gW@i#Q!T"
     span.style.visibility = "hidden"
     span.style.fontSize = "50px"
     span.style.opacity = 0;
@@ -223,5 +221,10 @@ export const loadFont = (font, callback) => {
     span.style.bottom = 0
     span.style.left = 0
     span.style.zIndex = -1
+    span.style.fontFamily = "Microsoft YaHei"
+    document.body.appendChild(span)
+    setTimeout(() => {
+      span.style.fontFamily = f
+    }, 1000)
   }
 }

@@ -66,6 +66,65 @@ export const getBodyWH = () => {
 }
 
 
+/*
+------------------------------------------------------
+|
+|        注册事件
+|   obj 事件元素  type 事件类型  fn触发函数
+|
+------------------------------------------------------
+*/
+
+export const addEvent = (obj, type, fn) => {
+  if (obj.attachEvent) { //ie
+    obj.attachEvent('on' + type, () => {
+      fn.call(obj);
+    })
+  } else {
+    obj.addEventListener(type, fn, false);
+  }
+}
+
+/*
+------------------------------------------------------
+|
+|        删除事件
+|   obj 事件元素  type 事件类型  fn触发函数
+|
+------------------------------------------------------
+*/
+export const removeEvent = (obj, type, fn) => {
+  if (obj.attachEvent) { //ie
+    obj.detachEvent('on' + type, () => {
+      fn.call(obj);
+    })
+  } else {
+    obj.removeEventListener(type, fn, false);
+  }
+}
+
+
+/*
+-----------------------------------------------------
+|
+|       获取滚动条距离浏览器顶部的距离
+|   
+-----------------------------------------------------
+*/
+export const getScrollTop = () => {
+  let scrollPos;
+  if (window.pageYOffset) {
+    scrollPos = window.pageYOffset
+  } else if (document.compatMode && document.compatMode !== 'BackCompat') {
+    scrollPos = document.documentElement.scrollTop
+  } else if (document.body) {
+    scrollPos = document.body.scrollTop
+  }
+  return scrollPos
+}
+
+
+
 
 //----------------------- 判断是否横屏 -------------------------//
 
@@ -122,6 +181,30 @@ export const device = () => {
   }
   return 'Pc'
 };
+
+
+/*
+-----------------------------------------------------
+|
+|       获取元素距离浏览器顶部的距离
+| 
+-----------------------------------------------------
+*/
+export const getElemTop = elem => {
+
+  let elemTop = elem.offsetTop //获得elem元素距相对定位的父元素的top
+  elem = elem.offsetParent //将elem换成起相对定位的父元素
+
+
+  while (elem != null) { //只要还有相对定位的父元素 
+    /*获得父元素 距他父元素的top值,累加到结果中 */
+    elemTop += elem.offsetTop
+    //再次将elem换成他相对定位的父元素上;
+    elem = elem.offsetParent
+  }
+  return elemTop
+}
+
 
 
 //----------------------- 摇一摇事件 -------------------------//

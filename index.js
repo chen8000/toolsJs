@@ -1,8 +1,12 @@
-//----------------------- rem -------------------------//
-// rem
-// rem
-// 设计稿宽度 : 750  ( 2倍图 )
-// 缩放比例 : 100   ( 1rem === 100px )
+/*
+------------------------------------------------------
+|
+|        rem
+|   设计稿宽度 : 750  ( 2倍图 )
+|   缩放比例 : 100   ( 1rem === 100px )
+|
+------------------------------------------------------
+*/
 export const remJs = () => {
   setRootFontSize()
   window.addEventListener('resize', setRootFontSize, !1)
@@ -16,21 +20,27 @@ function setRootFontSize() {
 
 
 
-//----------------------- 进度条 -------------------------//
-// 1-100 进度
-// inter(
-//   // 第一个数组里是卡住的数字节点
-//   // 第二个数组是速度
-//   // [[32, 55, 63, 71, 85, 98], [100, 300, 160, 100, 50, 700]],
-//   s => {
-//     // s 是数字
-//     this.loadingNum = s;
-//   },
-//   () => {
-//     // 100 %
-//     this.hideShow();
-//   }
-// );
+/*
+------------------------------------------------------
+|
+|   1-100 进度
+|     inter(
+|       // 第一个数组里是卡住的数字节点
+|       // 第二个数组是速度
+|       // [[32, 55, 63, 71, 85, 98], [100, 300, 160, 100, 50, 700]],
+|       s => {
+|         // s 是数字
+|         this.loadingNum = s;
+|       },
+|       () => {
+|         // 100 %
+|         this.hideShow();
+|       }
+|     );
+|
+------------------------------------------------------
+*/
+
 export const inter = (arr, s, callback) => {
   let t,
     num = 0,
@@ -56,7 +66,13 @@ export const inter = (arr, s, callback) => {
 
 
 
-//----------------------- 获取body的宽高 -------------------------//
+/*
+------------------------------------------------------
+|
+|        获取body的宽高
+|
+------------------------------------------------------
+*/
 // 获取body的宽高
 export const getBodyWH = () => {
   return {
@@ -126,8 +142,14 @@ export const getScrollTop = () => {
 
 
 
-//----------------------- 判断是否横屏 -------------------------//
 
+/*
+------------------------------------------------------
+|      
+|        判断是否横屏
+|
+------------------------------------------------------
+*/
 export const HS = ca => {
 
   window.onorientationchange = function () {
@@ -143,7 +165,13 @@ export const HS = ca => {
 
 
 
-//----------------------- 数组去重 -------------------------//
+/*
+------------------------------------------------------
+|      
+|        数组去重
+|
+------------------------------------------------------
+*/
 // [1,2,1,2,1].unique()
 Array.prototype.unique = function () {
   let l = this.length,
@@ -161,8 +189,13 @@ Array.prototype.unique = function () {
 
 
 
-//----------------------- 返回设备类型 -------------------------//
-
+/*
+------------------------------------------------------
+|      
+|        返回设备类型
+|
+------------------------------------------------------
+*/
 export const device = () => {
   let userAgentInfo = navigator.userAgent;
   let Agents = [
@@ -207,7 +240,13 @@ export const getElemTop = elem => {
 
 
 
-//----------------------- 摇一摇事件 -------------------------//
+/*
+-----------------------------------------------------
+|
+|       摇一摇事件
+| 
+-----------------------------------------------------
+*/
 // 传入要触发的函数
 export const shake = callback => {
   //运动事件监听
@@ -249,7 +288,13 @@ export const shake = callback => {
 }
 
 
-//----------------------- 长按事件 -------------------------//
+/*
+-----------------------------------------------------
+|
+|       长按事件
+| 
+-----------------------------------------------------
+*/
 // 传入要绑定事件的元素，和要触发的函数
 export const press = (ele, callback) => {
   let timeout = 0;
@@ -261,9 +306,70 @@ export const press = (ele, callback) => {
   }, false);
 }
 
+/*
+-----------------------------------------------------
+|
+|       向上向下滑动事件
+|       touchEvent(ele, ['up', 'down'])
+|       事件类型需要是一个数组
+| 
+-----------------------------------------------------
+*/
 
-//----------------------- 加载外部字体 -------------------------//
-// 解决在外部字体没有加载进来页面文字不显示问题
+export const touchEvent = (ele, event) => {
+  let startX, startY, moveEndX, moveEndY, X, Y;
+  ele.addEventListener("touchstart", function (e) {
+    // 判断默认行为是否可以被禁用
+    if (e.cancelable) {
+      // 判断默认行为是否已经被禁用
+      if (!e.defaultPrevented) {
+        e.preventDefault();
+      }
+    }
+    startX = e.changedTouches[0].pageX;
+    startY = e.changedTouches[0].pageY;
+  });
+  ele.addEventListener("touchend", function (e) {
+    // 判断默认行为是否可以被禁用
+    if (e.cancelable) {
+      // 判断默认行为是否已经被禁用
+      if (!e.defaultPrevented) {
+        e.preventDefault();
+      }
+    }
+    moveEndX = e.changedTouches[0].pageX;
+    moveEndY = e.changedTouches[0].pageY;
+    X = moveEndX - startX;
+    Y = moveEndY - startY;
+
+    //左滑
+    if (X > 0 && event.includes('left')) {
+      alert('右滑');
+    }
+    //右滑
+    else if (X < 0 && event.includes('right')) {
+      alert('左滑');
+    }
+    //下滑
+    else if (Y > 0 && event.includes('down')) {
+      alert('下滑');
+    }
+    //上滑
+    else if (Y < 0 && event.includes('up')) {
+      alert('上滑');
+    }
+  });
+}
+
+
+/*
+-----------------------------------------------------
+|
+|       加载外部字体
+|       解决在外部字体没有加载进来页面文字不显示问题
+| 
+-----------------------------------------------------
+*/
 export const loadFont = (font, callback) => {
 
   let num = 0
@@ -309,5 +415,25 @@ export const loadFont = (font, callback) => {
     setTimeout(() => {
       span.style.fontFamily = f
     }, 1000)
+  }
+}
+
+
+
+/*
+-----------------------------------------------------
+|
+|       判断是否是微信浏览器
+| 
+-----------------------------------------------------
+*/
+export const isWeiXin = () => {
+  //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
+  var ua = window.navigator.userAgent.toLowerCase();
+  //通过正则表达式匹配ua中是否含有MicroMessenger字符串
+  if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+    return true; // 是微信浏览器
+  } else {
+    return false; // 不是微信浏览器
   }
 }

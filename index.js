@@ -1,6 +1,6 @@
 /*
 tools 目录
-1. remJs
+1. remJs  根据设计高宽度设置全局font-size
 2. inter  h5进度条函数
 3. getBodyWH  获取body的宽高
 4. addEvent 添加事件

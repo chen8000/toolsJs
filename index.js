@@ -310,13 +310,14 @@ export const press = (ele, callback) => {
 -----------------------------------------------------
 |
 |       向上向下滑动事件
-|       touchEvent(ele, ['up', 'down'])
-|       事件类型需要是一个数组
+|       touchEvent(ele, ['up', 'down'], type => {console.log(type)})
+|       事件类型需要是一个数组, 回调函数接收一个参数，
+|       这个参数返回string类型的字符串： left  right  down up 
 | 
 -----------------------------------------------------
 */
 
-export const touchEvent = (ele, event) => {
+export const touchEvent = (ele, event, ca) => {
   let startX, startY, moveEndX, moveEndY, X, Y;
   ele.addEventListener("touchstart", function (e) {
     // 判断默认行为是否可以被禁用
@@ -343,20 +344,20 @@ export const touchEvent = (ele, event) => {
     Y = moveEndY - startY;
 
     //左滑
-    if (X > 0 && event.includes('left')) {
-      alert('右滑');
+    if (X < 0 && event.includes('left')) {
+      ca('left')
     }
     //右滑
-    else if (X < 0 && event.includes('right')) {
-      alert('左滑');
+    else if (X > 0 && event.includes('right')) {
+      ca('right')
     }
     //下滑
     else if (Y > 0 && event.includes('down')) {
-      alert('下滑');
+      ca('down')
     }
     //上滑
     else if (Y < 0 && event.includes('up')) {
-      alert('上滑');
+      ca('up')
     }
   });
 }

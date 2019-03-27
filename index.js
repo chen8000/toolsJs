@@ -28,20 +28,21 @@ tools 目录
 1. 
 ------------------------------------------------------
 |
-|        rem
-|   设计稿宽度 : 750  ( 2倍图 )
+|   remJs(750) 传入设计稿宽度
 |   缩放比例 : 100   ( 1rem === 100px )
 |
 ------------------------------------------------------
 */
-export const remJs = () => {
-  setRootFontSize()
-  window.addEventListener('resize', setRootFontSize, !1)
+export const remJs = psd => {
+  setRootFontSize(psd)
+  window.addEventListener('resize', () => {
+    setRootFontSize(psd)
+  }, !1)
 }
 
-function setRootFontSize() {
+function setRootFontSize(psd) {
   let docWidth = document.documentElement.getBoundingClientRect().width
-  document.documentElement.style.fontSize = docWidth / 750 * 100 + 'px'
+  document.documentElement.style.fontSize = docWidth / psd * 100 + 'px'
 }
 
 

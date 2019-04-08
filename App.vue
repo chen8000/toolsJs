@@ -33,10 +33,10 @@ export default {
         this.setWH();
         if (t) {
           this.shu = false;
-          remJs(psdWH[1]);
+          remJs(this.psdWH[1]);
         } else {
           this.shu = true;
-          remJs(psdWH[0]);
+          remJs(this.psdWH[0]);
         }
       });
     },

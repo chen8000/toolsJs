@@ -1,0 +1,58 @@
+// 上下左右剧中  LTRB 
+@mixin LTRBcenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// 左右居中
+@mixin LRcenter {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// 上下居中
+@mixin TBcenter {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+// 居左上
+@mixin LTput {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+// 默认00点旋转90deg
+@mixin rotate($x:0, $y:0) {
+  transform-origin: $x $y;
+  transform: rotate(90deg);
+}
+
+// 设置宽高
+@mixin wh($w:auto, $h:auto) {
+  width: $w;
+  height: $h;
+}
+
+// 背景上下左右局中
+@mixin bgObject {
+  @include wh(100%, 100%);
+  object-fit: cover;
+  display: block;
+}
+
+// 图片占位
+@mixin imgPoster($b:0%) {
+  height: 0;
+  padding-bottom: $b;
+}
+
+// 禁止图片长按保存
+@mixin selectNone {
+  pointer-events: none;
+}

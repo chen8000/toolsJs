@@ -15,7 +15,7 @@ tools 目录
 13. touchEvent 上下左右滑动事件
 14. loadFont 加载外部字体
 15. isWeiXin 判断是否是微信浏览器
-
+16. sliceStr 根据需求截取字符串长度，超出显示...
 
 */
 
@@ -478,5 +478,45 @@ export const isWeiXin = () => {
     return true; // 是微信浏览器
   } else {
     return false; // 不是微信浏览器
+  }
+}
+
+
+
+/*
+16. 
+-----------------------------------------------------
+|
+|       根据需求截取字符串长度，超出显示...
+| 
+-----------------------------------------------------
+*/
+
+export const sliceStr = (str, len) => {
+  var nLen = 0;
+  var cutIndex = 0;
+
+  for (var i = 0; i < str.length; i++) {
+    if (escape(str[i]).indexOf("%u") < 0) {
+      //不是中文
+      nLen += 1;
+    } else {
+      //中文
+      nLen += 2;
+    }
+    if (nLen > len * 2) {
+      cutIndex = i;
+      break;
+    }
+  }
+  if (nLen <= len * 2) {
+    cutIndex = str.length;
+  }
+  var finalName = str.slice(0, cutIndex);
+
+  if (str.length > finalName.length) {
+    return finalName + "...";
+  } else {
+    return finalName;
   }
 }

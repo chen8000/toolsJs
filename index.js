@@ -16,7 +16,7 @@ tools 目录
 14. loadFont 加载外部字体
 15. isWeiXin 判断是否是微信浏览器
 16. sliceStr 根据需求截取字符串长度，超出显示...
-
+17. GetRequest 返回url参数
 */
 
 
@@ -519,4 +519,25 @@ export const sliceStr = (str, len) => {
   } else {
     return finalName;
   }
+}
+
+/*
+17. 
+-----------------------------------------------------
+|
+|       返回url参数
+| 
+-----------------------------------------------------
+*/
+export const GetRequest = () => {
+  let url = location.search;
+  let theRequest = new Object();
+  if (url.indexOf("?") != -1) {
+    let str = url.substr(1);
+    let strs = str.split("&");
+    for (let i = 0; i < strs.length; i++) {
+      theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+    }
+  }
+  return theRequest;
 }

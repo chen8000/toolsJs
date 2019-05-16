@@ -548,7 +548,8 @@ export const GetRequest = () => {
 18. 
 -----------------------------------------------------
 |
-|        
+|      ⚠️ npm install preloadjs
+|
 |      preLoad(
 |                [
 |                  {id:'img', './img.jpg'},
@@ -566,19 +567,21 @@ export const GetRequest = () => {
 -----------------------------------------------------
 */
 
-export const preLoad = (datas, progress, complete) => {
-    let obj = new createjs.LoadQueue(true);
-    //注意加载音频文件需要调用如下代码行
-    obj.installPlugin(createjs.SOUND);
-    //设置最大并发连接数  最大值为10
-    obj.setMaxConnections(10);
-    obj.loadManifest(datas);
+export const preLoad = (d, p, c) => {
+  let obj = new createjs.LoadQueue(true);
+  //注意加载音频文件需要调用如下代码行
+  obj.installPlugin(createjs.SOUND);
+  //设置最大并发连接数  最大值为10
+  obj.setMaxConnections(10);
+  obj.loadManifest(d);
 
 
-    //添加进度条事件
-    obj.addEventListener("progress", progress)
-    //为objed添加当队列完成全部加载后触发事件
-    obj.addEventListener("complete", () => {
-      complete(obj._loadedResults)
-    })
+  //添加进度条事件
+  obj.addEventListener("progress", event => {
+      p(Math.ceil(event.loaded * 100))
+  })
+  //为objed添加当队列完成全部加载后触发事件
+  obj.addEventListener("complete", () => {
+    c(obj._loadedResults)
+  })
 }

@@ -550,38 +550,43 @@ export const GetRequest = () => {
 |
 |      ⚠️ npm install preloadjs
 |
-|      preLoad(
-|                [
-|                  {id:'img', './img.jpg'},
-|                  {id:'mp3', './img.mp3'},
-|                  {id:'mp4', './img.mp4'},
-|                  .....
-|                ], 
-|                res => {}, 
-|                res => {}
-|              )
-|        参数1: 需要加载的资源队列
-|        参数2: 一个函数，接收加载进度数字
-|        参数3: 一个函数，接收加载完后的队列对象
+|      preload({
+|            datas,
+|            num: num => {
+|                $('.percent').html(num)
+|            },
+|            res: res => {
+|                let mp4 = res.mp4
+|                let img = res.img
+|                document.getElementById('video1').appendChild(mp4)
+|
+|                $('#btn').click(() => {
+|                    mp4.play()
+|                })
+|                $('#imgBtn').click(() => {
+|                    document.getElementById('img').appendChild(img)
+|                })
+|            }
+|        })
+|        datas :  需要加载的资源队列  ———————————— 必填
+|        num   :  一个函数，接收加载进度数字  ————— 选填
+|        res   :  一个函数，接收加载完后的队列对象 — 必填
 | 
 -----------------------------------------------------
 */
-
-export const preLoad = (d, p, c) => {
+export const preLoad = ({datas, num, res}) => { 
   let obj = new createjs.LoadQueue(true);
-  //注意加载音频文件需要调用如下代码行
-  obj.installPlugin(createjs.SOUND);
-  //设置最大并发连接数  最大值为10
-  obj.setMaxConnections(10);
-  obj.loadManifest(d);
-
-
-  //添加进度条事件
-  obj.addEventListener("progress", event => {
-      p(Math.ceil(event.loaded * 100))
-  })
-  //为objed添加当队列完成全部加载后触发事件
-  obj.addEventListener("complete", () => {
-    c(obj._loadedResults)
-  })
+   //注意加载音频文件需要调用如下代码行
+   obj.installPlugin(createjs.SOUND);
+   //设置最大并发连接数  最大值为10
+   obj.setMaxConnections(10);
+   obj.loadManifest(datas);
+   //添加进度条事件
+   obj.addEventListener("progress", event => {
+       num && num(Math.ceil(event.loaded * 100))
+   })
+   //为objed添加当队列完成全部加载后触发事件
+   obj.addEventListener("complete", () => {
+       res(obj._loadedResults)
+   })         
 }

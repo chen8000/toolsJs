@@ -17,6 +17,7 @@ tools 目录
 15. isWeiXin 判断是否是微信浏览器
 16. sliceStr 根据需求截取字符串长度，超出显示...
 17. GetRequest 返回url参数
+18. preLoad 预加载资源 img, gif, mp3, mp4
 */
 
 
@@ -540,4 +541,44 @@ export const GetRequest = () => {
     }
   }
   return theRequest;
+}
+
+
+/*
+18. 
+-----------------------------------------------------
+|
+|        
+|      preLoad(
+|                [
+|                  {id:'img', './img.jpg'},
+|                  {id:'mp3', './img.mp3'},
+|                  {id:'mp4', './img.mp4'},
+|                  .....
+|                ], 
+|                res => {}, 
+|                res => {}
+|              )
+|        参数1: 需要加载的资源队列
+|        参数2: 一个函数，接收加载进度数字
+|        参数3: 一个函数，接收加载完后的队列对象
+| 
+-----------------------------------------------------
+*/
+
+export const preLoad = (datas, progress, complete) => {
+    let obj = new createjs.LoadQueue(true);
+    //注意加载音频文件需要调用如下代码行
+    obj.installPlugin(createjs.SOUND);
+    //设置最大并发连接数  最大值为10
+    obj.setMaxConnections(10);
+    obj.loadManifest(datas);
+
+
+    //添加进度条事件
+    obj.addEventListener("progress", progress)
+    //为objed添加当队列完成全部加载后触发事件
+    obj.addEventListener("complete", () => {
+      complete(obj._loadedResults)
+    })
 }

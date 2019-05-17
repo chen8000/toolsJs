@@ -14,7 +14,7 @@ tools 目录
 12. press 长按事件
 13. touchEvent 上下左右滑动事件
 14. loadFont 加载外部字体
-15. isWeiXin 判断是否是微信浏览器
+15. XBdev 判断设备是微信还是微博
 16. sliceStr 根据需求截取字符串长度，超出显示...
 17. GetRequest 返回url参数
 18. preLoad 预加载资源 img, gif, mp3, mp4
@@ -471,14 +471,17 @@ export const loadFont = (font, callback) => {
 | 
 -----------------------------------------------------
 */
-export const isWeiXin = () => {
-  //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
-  var ua = window.navigator.userAgent.toLowerCase();
-  //通过正则表达式匹配ua中是否含有MicroMessenger字符串
-  if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-    return true; // 是微信浏览器
-  } else {
-    return false; // 不是微信浏览器
+export const XBdev = () => {
+  let ua = window.navigator.userAgent.toLowerCase()
+  if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+    // 微信
+    return 'weixin'
+  }else if(ua.match(/WeiBo/i) == "weibo"){
+    // 微博
+    return 'weibo'
+  }else{
+    // 啥也不是
+    return 'default'
   }
 }
 

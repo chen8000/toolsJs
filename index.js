@@ -18,6 +18,8 @@ tools 目录
 16. sliceStr 根据需求截取字符串长度，超出显示...
 17. GetRequest 返回url参数
 18. preLoad 预加载资源 img, gif, mp3, mp4
+19. 绘制带字与字之间的间距，直接使用api即可
+    ctx.letterSpacingText('文本', 547 / 2, 70, 5);
 */
 /*
 1. 
@@ -587,3 +589,56 @@ export const preLoad = ({datas, num, res}) => {
        res(obj._loadedResults)
    })         
 }
+
+
+
+/*
+19. 
+-----------------------------------------------------
+| 
+|       绘制带字与字之间的间距，直接使用api即可
+|       使用 ctx.letterSpacingText('文本', 547 / 2, 70, 5);
+|       参数为：文本，x, y, letterSpacing间距值
+|       不使用 ctx.fillText
+|
+-----------------------------------------------------
+*/
+
+CanvasRenderingContext2D.prototype.letterSpacingText = function (text, x, y, letterSpacing) {
+  var context = this;
+  var canvas = context.canvas;
+  
+  if (!letterSpacing && canvas) {
+      letterSpacing = parseFloat(window.getComputedStyle(canvas).letterSpacing);
+  }
+  if (!letterSpacing) {
+      return this.fillText(text, x, y);
+  }
+  
+  var arrText = text.split('');
+  var align = context.textAlign || 'left';
+  
+  // 这里仅考虑水平排列
+  var originWidth = context.measureText(text).width;
+  // 应用letterSpacing占据宽度
+  var actualWidth = originWidth + letterSpacing * (arrText.length - 1);
+  // 根据水平对齐方式确定第一个字符的坐标
+  if (align == 'center') {
+      x = x - actualWidth / 2;
+  } else if (align == 'right') {
+      x = x - actualWidth;
+  }
+  
+  // 临时修改为文本左对齐
+  context.textAlign = 'left';
+  // 开始逐字绘制
+  arrText.forEach(function (letter) {
+      var letterWidth = context.measureText(letter).width;
+      context.fillText(letter, x, y);
+      // 确定下一个字符的横坐标
+      x = x + letterWidth + letterSpacing;
+  });
+  // 对齐方式还原
+  context.textAlign = align;
+};
+

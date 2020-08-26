@@ -20,6 +20,16 @@ tools 目录
 18. preLoad 预加载资源 img, gif, mp3, mp4
 19. 绘制带字与字之间的间距，直接使用api即可
     ctx.letterSpacingText('文本', 547 / 2, 70, 5);
+20. fnTimeCountDown 倒计时 年月日
+21. renderFileSize 计算文件大小
+22. GetRequest 获取url参数
+23. transTime 格式化分钟，秒 --> 00:00
+24. formatDate 格式化日前
+25. getFileExtname 获取文件后缀名
+26. scrToMax 全屏
+27. scrToMin 退出全屏
+28. isFullScreen 判断是否全屏
+29. checkGet 过滤值为空的对象
 */
 /*
 1. 
@@ -641,4 +651,269 @@ CanvasRenderingContext2D.prototype.letterSpacingText = function (text, x, y, let
   // 对齐方式还原
   context.textAlign = align;
 };
+
+/**
+ * # 20
+ * @name: fnTimeCountDown
+ * @msg: 倒计时  年月日时分秒
+ * @param {type} d: 截止时间  mydate：当前时间  callback1：每秒返回 年月日时分秒  end：倒计时结束后调用
+ * @return {type} Number Function
+ * 
+ * 调用方法：
+ *    fnTimeCountDown(
+        +Date.UTC(2020, 8, 26, 16, 12, 0), //结束日期9月10日18
+        new Date(), // 当前时间
+        timer => {
+          console.log(timer)
+          this.year = timer.year
+          this.month = timer.month
+          this.day = timer.day
+          this.hour = timer.hour
+          this.mini = timer.mini
+          this.sec = timer.sec
+        },
+        () => {
+          console.log('时间到')
+        }
+      )
+ */
+export const fnTimeCountDown =  (d, mydate, callback1, end) => {
+  var now = eval(Date.UTC(mydate.getFullYear(), parseInt(mydate.getMonth())+1, mydate.getDate(), mydate.getHours(), mydate.getMinutes(), mydate.getSeconds()))
+  var f = {
+      zero: function (n) {
+          var n = parseInt(n, 10);
+          if (n > 0) {
+              if (n <= 9) {
+                  n = "0" + n;
+              }
+              return String(n);
+          } else {
+              return "00";
+          }
+      },
+      dv: function () {
+          d = d || Date.UTC(2050, 0, 1); //如果未定义时间，则我们设定倒计时日期是2050年1月1日
+          var future = new Date(d);
+          var nowTime = new Date(now);
+          //现在将来秒差值
+          var dur = Math.round((future.getTime() - nowTime.getTime()) / 1000), pms = {
+              sec: "00",
+              mini: "00",
+              hour: "00",
+              day: "00",
+              month: "00",
+              year: "0"
+          };
+          if (dur > 0) {
+              pms.sec = f.zero(dur % 60);
+              pms.mini = Math.floor((dur / 60)) > 0 ? f.zero(Math.floor((dur / 60)) % 60) : "00";
+              pms.hour = Math.floor((dur / 3600)) > 0 ? f.zero(Math.floor((dur / 3600)) % 24) : "00";
+              //pms.day = Math.floor((dur / 86400)) > 0 ? f.zero(Math.floor((dur / 86400)) % 30) : "00";
+              pms.day = Math.floor((dur / 86400)) > 0 ? f.zero(Math.floor(dur / 86400)) : "00";
+              //月份，以实际平均每月秒数计算
+              pms.month = Math.floor((dur / 2629744)) > 0 ? f.zero(Math.floor((dur / 2629744)) % 12) : "00";
+              //年份，按回归年365天5时48分46秒算
+              pms.year = Math.floor((dur / 31556926)) > 0 ? Math.floor((dur / 31556926)) : "0";
+          }
+          return pms;
+      },
+      ui: function () {
+          // 每次返回年月日数据
+          callback1(f.dv())
+          now = now + 1000;
+          if (f.dv().sec == "00" && f.dv().mini == "00" && f.dv().hour == "00" && f.dv().day == "00" && f.dv().month == "00" && f.dv().year == "0") {
+            setTimeout(() => {
+              callback1(f.dv())
+              end()
+            }, 1000)
+          } else {
+            setTimeout(f.ui, 1000);
+          }
+      }
+  };
+  f.ui()
+}
+
+
+  /**
+   * # 21
+   * @name: renderFileSize
+   * @msg: 计算文件大小，并添加单位
+   * @param {type} String
+   * @return: String
+   */
+
+  export const renderFileSize = file => {
+    return renderSize(file.size)
+  }
+  function renderSize(value){
+    if(null==value||value==''){
+        return "0 Bytes";
+    }
+    var unitArr = new Array("Bytes","KB","MB","GB","TB","PB","EB","ZB","YB");
+    var index=0,
+        srcsize = parseFloat(value);
+  index=Math.floor(Math.log(srcsize)/Math.log(1024));
+    var size =srcsize/Math.pow(1024,index);
+    //  保留的小数位数
+    size=size.toFixed(2);
+    return size+unitArr[index];
+  }
+
+
+/**
+ * #22
+ * @name: GetRequest
+ * @msg: 获取url参数
+ * @param {type} 
+ * @return {type} 
+ */
+export const GetRequest = () =>{
+  let urlStr = window.location.href
+    if (typeof urlStr == "undefined") {
+        var url = decodeURI(location.search); //获取url中"?"符后的字符串
+    } else {
+        var url = "?" + urlStr.split("?")[1];
+    }
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        let strs = str.split("&");
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = decodeURI(strs[i].split("=")[1]);
+        }
+    }
+    return theRequest;
+}
+
+/**
+ * #23
+ * @name: transTime
+ * @msg: 格式化分钟 秒 --> 00:00
+ * @param {type} 
+ * @return {type} 
+ */
+export const transTime = t => {
+  let d = parseInt(t)
+  let m = parseInt(d/60)
+  let sec = d % 60 + ''
+  let isM0 = ':'
+  if (m == 0) {
+      m = '00'
+  } else if (m < 10 ) {
+      m = '0'+m
+  }
+  if (sec.length == 1) {
+      sec = '0' + sec
+  }
+  return m + isM0 + sec
+}
+
+
+/**
+ * #24
+ * @name: formatDate
+ * @msg: 格式化日期
+ * @param {type} format: yyyy-MM-dd hh:mm:ss
+ * @return {type} 
+ */
+
+export const formatDate = (date, format) => {
+  let time = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds(),
+    'q+': Math.floor((date.getMonth() + 3) / 3),
+    'S+': date.getMilliseconds()
+  }
+  if (/(y+)/i.test(format)) {
+    format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+  }
+  for (let k in time) {
+    if (new RegExp('(' + k + ')').test(format)) {
+      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? time[k] : ('00' + time[k]).substr(('' + time[k]).length))
+    }
+  }
+  return format
+}
+
+  /**
+   * #25
+   * @name: getFileExtname
+   * @msg: 获取文件后缀名
+   * @param {type} 
+   * @return {type} 
+   */
+  export const getFileExtname = filename => {
+    if(!filename||typeof filename!='string'){
+       return false
+    };
+    let a = filename.split('').reverse().join('');
+    let b = a.substring(0,a.search(/\./)).split('').reverse().join('');
+    return b
+  };
+
+  /**
+   * #26
+   * @name: scrToMax
+   * @msg: 全屏
+   * @param {type} 
+   * @return {type} 
+   */
+export const scrToMax = () => {
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen()
+  } else if (document.documentElement.mozRequestFullScreen) {
+    document.documentElement.mozRequestFullScreen()
+  } else if (document.documentElement.webkitRequestFullscreen) {
+    document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT)
+  }
+}
+
+/**
+ * #27
+ * @name: scrToMin
+ * @msg: 退出全屏
+ * @param {type} 
+ * @return {type} 
+ */
+export const scrToMin = () => {
+  if (document.cancelFullScreen) {
+    document.cancelFullScreen()
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen()
+  } else if (document.webkitCancelFullScreen) {
+    document.webkitCancelFullScreen()
+  }
+}
+
+/**
+ * #28
+ * @name: isFullScreen
+ * @msg: 判断是否是全屏
+ * @param {type} 
+ * @return {type} 
+ */
+export const isFullScreen = () => {
+  return document.isFullScreen || document.mozIsFullScreen || document.webkitIsFullScreen
+}
+
+/**
+ * #29
+ * @name: checkGet
+ * @msg: 过滤值为空的对象
+ * @param {type} 
+ * @return {type} 
+ */
+export const checkGet = data => {
+  let obj = {}
+  Object.keys(data).forEach(v => {
+    if (data[v] !== '') {
+      obj[v] = typeof data[v] === 'string' ? data[v].replace(/(^\s*)|(\s*$)/g, "") : data[v]
+    }
+  })
+  return obj
+}
 

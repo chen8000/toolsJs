@@ -30,6 +30,7 @@ tools 目录
 27. scrToMin 退出全屏
 28. isFullScreen 判断是否全屏
 29. checkGet 过滤值为空的对象
+30. scrollMoveAnimate  根据滚动条滚动执行动画
 */
 /*
 1. 
@@ -178,9 +179,6 @@ export const getScrollTop = () => {
   }
   return scrollPos
 }
-
-
-
 
 
 /*
@@ -916,4 +914,31 @@ export const checkGet = data => {
   })
   return obj
 }
+
+/**
+ * #30
+ * @name: scrollMoveAnimate
+ * @msg: 根据滚动条滚动执行动画
+ * @param {type} 
+ * @return {type} 
+ */
+
+ export class scrollMoveAnimate {
+   constructor(animateInterval){
+     this.animateInterval = animateInterval
+     this.addScrollEvent()
+   }
+   addScrollEvent () {
+    window.onscroll = () => {
+      this.scrollT = document.documentElement.scrollTop || document.body.scrollTop
+      this.scrolling()
+    }
+   }
+   scrolling () {
+    this.animateInterval.forEach(v => {
+      if(this.scrollT >= v[0] && this.scrollT < v[1])
+      v[3](parseInt((this.scrollT - v[0]) / ((v[1] - v[0]) / v[2])))
+    })
+   }
+ }
 

@@ -923,6 +923,17 @@ export const checkGet = data => {
  * @return {type} 
  */
 
+/*
+参数1，参数2，--> 触发序列帧的滚动条区间
+参数3 --> 序列帧的length
+参数4 --> 回调函数，返回当前需要显示的序列帧的下标
+new scrollMoveAnimate([
+  [100, 300, 5, res => {console.log(res)}],
+  [300, 400, 5, res => {console.log(res)}],
+  [400, 3600, 5, res => {console.log(res)}]
+])
+*/
+
  export class scrollMoveAnimate {
    constructor(animateInterval){
      this.animateInterval = animateInterval
